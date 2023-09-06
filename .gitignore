@@ -1,0 +1,18 @@
+# .gitignore
+
+# Python/Django specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+env/
+*.env
+
+# Database files
+db.sqlite3
+
+# IDE files
+.vscode/
+.idea/
