@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .vrp import main
+from .geocoding import getLatLong
 
 # views.py
 from rest_framework.views import APIView
@@ -21,3 +23,15 @@ class AddNumbersView(APIView):
 
 
 # Create your views here.
+class VehicleRoutingView(APIView):
+    def post(self, request):
+        locationsList = request.data
+        locationListForVr = []
+        locationsLatLong = []
+        for i in range(len(locationsList['locations'])):
+            location = locationsList['locations'][i].split(" ")
+            locationListForVr.append('+'.join(location))
+            locationsLatLong.append(getLatLong(locationsList['locations'][i]))
+
+        return Response({'result': main(locationListForVr),
+                         'locationsLatLong': locationsLatLong})
