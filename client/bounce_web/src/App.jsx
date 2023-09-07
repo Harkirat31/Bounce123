@@ -4,7 +4,7 @@ import MapContainer from './MapContainer'
 import { Wrapper, Status, Spinner, ErrorComponent } from "@googlemaps/react-wrapper";
 
 const center = { lat: 43.6811345, lng: -79.58786719999999 };
-const zoom = 10;
+const zoom = 11;
 const render = (status) => {
   switch (status) {
     case Status.LOADING:
