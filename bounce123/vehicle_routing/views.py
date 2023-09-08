@@ -25,13 +25,17 @@ class AddNumbersView(APIView):
 # Create your views here.
 class VehicleRoutingView(APIView):
     def post(self, request):
-        locationsList = request.data
+        requestData = request.data
         locationListForVr = []
         locationsLatLong = []
-        for i in range(len(locationsList['locations'])):
-            location = locationsList['locations'][i].split(" ")
+        for i in range(len(requestData['locations'])):
+            location = requestData['locations'][i].split(" ")
             locationListForVr.append('+'.join(location))
-            locationsLatLong.append(getLatLong(locationsList['locations'][i]))
+            locationsLatLong.append(getLatLong(requestData['locations'][i]))
+        driverSize = requestData['driverSize']
+        vehiclesCapacity = requestData['vehiclesCapacity']
 
-        return Response({'result': main(locationListForVr),
-                         'locationsLatLong': locationsLatLong})
+        return Response({'result': main(locationListForVr, driverSize, vehiclesCapacity),
+                         'locationsLatLong': locationsLatLong,
+                         'locations': requestData['locations']
+                         },)

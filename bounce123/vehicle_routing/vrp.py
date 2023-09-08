@@ -5,14 +5,14 @@ from ortools.constraint_solver import pywrapcp
 from .distance_calculator import getDistanceMatrix
 
 
-def create_data_model(locationsList):
+def create_data_model(locationsList, driverSize, vehiclesCapacity):
     """Stores the data for the problem."""
     data = {}
     data["distance_matrix"] = getDistanceMatrix(locationsList)
     print(data["distance_matrix"])
     data["demands"] = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    data["vehicle_capacities"] = [4, 4, 4, 4, 1]
-    data["num_vehicles"] = 5
+    data["vehicle_capacities"] = vehiclesCapacity
+    data["num_vehicles"] = driverSize
     data["depot"] = 0
     return data
 
@@ -56,10 +56,10 @@ def print_solution(data, manager, routing, solution):
     return routes
 
 
-def main(locationsList):
+def main(locationsList, driverSize, vehiclesCapacity):
     """Solve the CVRP problem."""
     # Instantiate the data problem.
-    data = create_data_model(locationsList)
+    data = create_data_model(locationsList, driverSize, vehiclesCapacity)
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(

@@ -47,34 +47,72 @@ const MapComponent = ({ props }) => {
   )
 }
 const AddLocations = ({ props }) => {
-  const [locations, setLocations] = useState(["Bounce 123 Galaxy Boulevard Etobicoke", "40 Barrington Crescent Brampton", "48 Lanark Circle Brampton", "52 Woolgar Avenue Etobicoke", "17 Nagel Road North York", "611 Vaughan Rd Toronto", "83 Avondale Avenue North York", "2864 keele street Toronto", "19 Blaney Crescent North York", "3903 Oland Drive Mississauga", "4149 Chadburn crescent Mississaga", "3 Scarlettwood Court Etobicoke", "10 Knightsbridge Road Brampton", "47 Rowse Cres Etobicoke", "2700 Eglinton ave w Toronto", "25 Colonel Bertram Road Brampton", "134 rotondo cres Kleinburg", "2 Fernwood Rd Toronto"]);
+  const [locations, setLocations] = useState('');
+  const [locationssize, setLocatiossize] = useState(0)
+  const [driversize, setDriverSize] = useState(0)
+  const [driversvehiclecapacity, setDriversvehiclecapacity] = useState('')
   const navigate = useNavigate();
 
+  function onChangeAddresses(e) {
+    setLocations(e.target.value)
+    if (locations && locations != null && locations != "") {
+      setLocatiossize(locations.split("\n").filter((element) => element.length != 0).length)
+    }
+
+  }
+
+  function onChangeVehicleCapacity(e) {
+    setDriversvehiclecapacity(e.target.value)
+  }
+
   const handleClick = async () => {
+
+    let deliveryLocations = locations.split("\n")
+    deliveryLocations.unshift("Bounce 123 Galaxy Boulevard Etobicoke")
+    deliveryLocations = deliveryLocations.filter((element) => element.length != 0)
+    console.log(deliveryLocations)
+    console.log(driversize)
+    let driversvehiclecapacityinInt = driversvehiclecapacity.split(',').map((e) => parseInt(e))
+    console.log(driversvehiclecapacityinInt)
 
     const response = await fetch('http://127.0.0.1:8000/api/routing/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ locations })
+      body: JSON.stringify({ "locations": deliveryLocations, "driverSize": parseInt(driversize), "vehiclesCapacity": driversvehiclecapacityinInt })
     });
     // Todo: Create a type for the response that you get back from the server
     const data = await response.json();
 
 
     if (data) {
+      console.log(data)
       props(data)
       navigate("/map");
     } else {
       alert("Error");
     }
+
   };
 
   return (
     <div>
       <div>
         <h2>Assign Locations</h2>
-        <input type='textarea' value={locations} onChange={(e) => setLocations(e.target.value)} placeholder='Locations' />
-        <button onClick={handleClick}>Find</button>
+        <textarea style={{ width: 500, height: 200 }} value={locations} onChange={onChangeAddresses} rows={5}
+          cols={5} placeholder='Locations' />
+        <br></br>
+        <p>Total Locations :{locationssize}</p>
+        <div>
+          <p style={{ display: 'inline-block' }}>Drivers Strength:</p>  <input value={driversize} onChange={(e) => setDriverSize(e.target.value)}></input>
+        </div>
+        <br></br>
+        {driversize > 0 &&
+          <div>
+            <p style={{ display: 'inline-block' }}>Enter Each Driver Capacity separated by comma:</p> <input value={driversvehiclecapacity} onChange={onChangeVehicleCapacity} ></input>
+          </div>
+        }
+
+        <button onClick={handleClick}>Find Paths</button>
       </div>
     </div>
   )

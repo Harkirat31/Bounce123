@@ -2,7 +2,6 @@ import { React, useEffect, useRef } from 'react'
 
 
 
-const locations = ["Bounce 123 Galaxy Boulevard Etobicoke", "40 Barrington Crescent Brampton", "48 Lanark Circle Brampton", "52 Woolgar Avenue Etobicoke", "17 Nagel Road North York", "611 Vaughan Rd Toronto", "83 Avondale Avenue North York", "2864 keele street Toronto", "19 Blaney Crescent North York", "3903 Oland Drive Mississauga", "4149 Chadburn crescent Mississaga", "3 Scarlettwood Court Etobicoke", "10 Knightsbridge Road Brampton", "47 Rowse Cres Etobicoke", "2700 Eglinton ave w Toronto", "25 Colonel Bertram Road Brampton", "134 rotondo cres Kleinburg", "2 Fernwood Rd Toronto"]
 
 
 
@@ -18,6 +17,7 @@ const MapContainer = ({
         console.log(mapData)
         let strokeColors = ["#FF0000", "#68FF33", "#33D7FF", "#CA33FF", "#FF33AC", "#5B4B7F", "#E2E25E", "#07F6F6"]
         let locationsLatLong = mapData['locationsLatLong']
+        let locations = mapData['locations']
 
         const map = new window.google.maps.Map(ref.current, {
             center,
