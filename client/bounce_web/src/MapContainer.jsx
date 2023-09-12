@@ -15,7 +15,7 @@ const MapContainer = ({
 
     useEffect(() => {
         console.log(mapData)
-        let strokeColors = ["#FF0000", "#68FF33", "#33D7FF", "#CA33FF", "#FF33AC", "#5B4B7F", "#E2E25E", "#07F6F6"]
+        let strokeColors = ["#FF0000", "#33D7FF", "#CA33FF", "#FF33AC", "#5B4B7F", "#E2E25E", "#07F6F6", "#FFCA33"]
         let locationsLatLong = mapData['locationsLatLong']
         let locations = mapData['locations']
 

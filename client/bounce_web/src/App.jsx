@@ -51,6 +51,7 @@ const AddLocations = ({ props }) => {
   const [locationssize, setLocatiossize] = useState(0)
   const [driversize, setDriverSize] = useState(0)
   const [driversvehiclecapacity, setDriversvehiclecapacity] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   function onChangeAddresses(e) {
@@ -66,7 +67,7 @@ const AddLocations = ({ props }) => {
   }
 
   const handleClick = async () => {
-
+    setLoading(true)
     let deliveryLocations = locations.split("\n")
     deliveryLocations.unshift("Bounce 123 Galaxy Boulevard Etobicoke")
     deliveryLocations = deliveryLocations.filter((element) => element.length != 0)
@@ -82,7 +83,7 @@ const AddLocations = ({ props }) => {
     });
     // Todo: Create a type for the response that you get back from the server
     const data = await response.json();
-
+    setLoading(false)
 
     if (data) {
       console.log(data)
@@ -111,6 +112,11 @@ const AddLocations = ({ props }) => {
             <p style={{ display: 'inline-block' }}>Enter Each Driver Capacity separated by comma:</p> <input value={driversvehiclecapacity} onChange={onChangeVehicleCapacity} ></input>
           </div>
         }
+        {loading &&
+          <div>
+            <p style={{ display: 'inline-block' }}>Please Wait....</p>
+          </div>
+        }
 
         <button onClick={handleClick}>Find Paths</button>
       </div>
@@ -119,3 +125,7 @@ const AddLocations = ({ props }) => {
 }
 
 export default App
+
+
+
+
