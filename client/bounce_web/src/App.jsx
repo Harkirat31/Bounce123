@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MapContainer from './MapContainer'
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-
+import config from './config';
 import { Wrapper, Status, Spinner, ErrorComponent } from "@googlemaps/react-wrapper";
+import SignIn from './SignIn';
 
 
 
@@ -14,6 +15,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path='' element={<SignIn></SignIn>}></Route>
         <Route path='/map' element={<MapComponent props={routingdata} />}></Route>
         <Route path='/find' element={<AddLocations props={setRoutingdata} />}></Route>
       </Routes>
@@ -53,6 +55,7 @@ const AddLocations = ({ props }) => {
   const [driversvehiclecapacity, setDriversvehiclecapacity] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
+  const apiUrl = config.apiUrl;
 
   function onChangeAddresses(e) {
     setLocations(e.target.value)
@@ -76,21 +79,34 @@ const AddLocations = ({ props }) => {
     let driversvehiclecapacityinInt = driversvehiclecapacity.split(',').map((e) => parseInt(e))
     console.log(driversvehiclecapacityinInt)
 
-    const response = await fetch('http://127.0.0.1:8000/api/routing/', {
+    const response = await fetch(`${apiUrl}/api/routing/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        "Authorization": "Bearer " + localStorage.getItem("token") 
+      },
       body: JSON.stringify({ "locations": deliveryLocations, "driverSize": parseInt(driversize), "vehiclesCapacity": driversvehiclecapacityinInt })
     });
     // Todo: Create a type for the response that you get back from the server
-    const data = await response.json();
-    setLoading(false)
+    if (!response.ok) {
+      if (response.status === 401) {
+        // Handle 401 status (Unauthorized) - redirect to login page or display an error message
+        console.log('Unauthorized: Please log in.');
+      } else {
+        // Handle other non-OK status codes as generic errors
+        console.log(`HTTP error! Status: ${response.status}`);
+      }
+    }
+    else {
+      const data = await response.json();
+      setLoading(false)
 
-    if (data) {
-      console.log(data)
-      props(data)
-      navigate("/map");
-    } else {
-      alert("Error");
+      if (data) {
+        console.log(data)
+        props(data)
+        navigate("/map");
+      } else {
+        alert("Error");
+      }
     }
 
   };

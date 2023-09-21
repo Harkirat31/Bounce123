@@ -24,6 +24,6 @@ def getLatLong(address):
             print(f'Latitude: {latitude}, Longitude: {longitude}')
             return [latitude, longitude]
         else:
-            print(f'Geocoding failed with status: {data["status"]}')
+            print(f'Geocoding failed with status: {data["status"]} {address}')
     else:
         print(f'Request failed with status code: {response.status_code}')
